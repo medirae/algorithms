@@ -88,34 +88,42 @@
  * }
  */
 type BSTIterator struct {
-	stack []*TreeNode
+	stack [][]interface{}
 }
 
 func Constructor(root *TreeNode) BSTIterator {
-	stack = []*TreeNode{root}
+	stack := [][]interface{}{{root, false}}
+	return BSTIterator{stack}
+}
+
+func (this *BSTIterator) VNext() {
+	node := this.stack[len(this.stack)-1][0].(*TreeNode)
+	state := this.stack[len(this.stack)-1][1].(bool)
+	this.stack = this.stack[:len(this.stack)-1]
+	if node.Left != nil && !state {
+		this.stack = append(this.stack, []interface{}{node, true})
+		if node.Left != nil {
+			this.stack = append(this.stack, []interface{}{node.Left, false})
+		}
+	} else if node.Right != nil {
+		this.stack = append(this.stack, []interface{}{node.Right, false})
+	}
 }
 
 func (this *BSTIterator) Next() int {
-	node := this.stack[len(this.stack)-1]
-	this.stack = this.stack[len(this.stack)-1]
-	if node.Right != nil {
-		this.stack = append(this.stack, node.Right)
+	node := this.stack[len(this.stack)-1][0].(*TreeNode)
+	state := this.stack[len(this.stack)-1][1].(bool)
+	for node.Left != nil && !state {
+		this.VNext()
+		node = this.stack[len(this.stack)-1][0].(*TreeNode)
+		state = this.stack[len(this.stack)-1][1].(bool)
 	}
-	if node.Left != nil {
-		this.stack = append(this.stack, node.Left)
-	}
+	this.VNext()
 	return node.Val
 }
 
 func (this *BSTIterator) HasNext() bool {
 	return len(this.stack) > 0
-}
-
-func inorder(root *TreeNode) {
-    stack := []*TreeNode{root}
-    for len(stack) > 0 {
-        
-    }
 }
 
 /**
@@ -125,4 +133,3 @@ func inorder(root *TreeNode) {
  * param_2 := obj.HasNext();
  */
 // @lc code=end
-
