@@ -45,25 +45,37 @@
 # CODE-START
 class Solution:
     def maxProfit(self, prices: List[int]) -> int:
+        # how about storing profits into buy prices and let it accumulate into one number
+        bp = [prices[0]] * 2
+        p = [0] * 2
+        for price in prices:
+            bp[0] = min(bp[0], price)
+            p[0] = max(p[0], price - bp[0])
+            bp[1] = min(bp[1], price - p[0])
+            p[1] = max(p[1], price - bp[1])
+
+        return p[1]
+
         # T[i][k] = max profit on the end of ith day having had k transactions finished
         # T[i][k][0] = not having the stock
         # T[i][k][1] = having the stock
         #
         # T[-1][0][0] = 0, T[-1][0][1] = -inf
-        #
         # not have
-        # T[i][0][0] = 0
-        # T[i][1][0] = max(T[i-1][0][1] + price[i], T[i-1][1][0])
-        # T[i][2][0] = max(T[i-1][1][1] + price[i], T[i-1][2][0])
         # T[i][k][0] = max(T[i-1][k-1][1] + price[i], T[i-1][k][0])
         # have
-        # T[i][0][1] = -price[i]
-        # T[i][1][1] = max(T[i-1][1][0] - price[i], T[i-1][1][1])
-        # T[i][2][1] = max(T[i-1][2][0] - price[i], T[i-1][2][1])
         # T[i][k][1] = max(T[i-1][k][0] - price[i], T[i-1][k][1])
-        #
-        # min-inclusive-days-behind = 2 * transactions-count     # for when you can have finished the last transaction today and not have a stock
-        # min-exclusive-days-behind = 2 * transactions-count + 1 # for when you need an extra day to purchase the stock today and hold it
+
+        # bp1 = prices[0]
+        # profit1 = 0
+        # bp2 = prices[0]
+        # profit2 = 0
+        # for price in prices:
+        #     bp1 = min(bp1, price)
+        #     profit1 = max(profit1, price - bp1)
+        #     bp2 = min(bp2, price - profit1)
+        #     profit2 = max(profit2, price - bp2)
+        # return profit2
 
         ni = float('-inf')
         # have, nothave
