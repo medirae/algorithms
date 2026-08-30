@@ -36,12 +36,12 @@ class Solution:
     def subsets(self, nums: List[int]) -> List[List[int]]:
         n = len(nums)
         dp = [None] * (n + 1)
-        def bt(ndx=0, p=False):
+        def bt(ndx=0):
             if ndx == n:
                 return [[]]
 
             if dp[ndx] is None:
-                dp[ndx] = bt(ndx + 1, False) + [[nums[ndx]] + i for i in bt(ndx + 1, True)]
+                dp[ndx] = bt(ndx + 1) + [[nums[ndx]] + i for i in bt(ndx + 1)]
 
             return dp[ndx]
 
