@@ -35,25 +35,25 @@
 # CODE-START
 class Solution:
     def triangleNumber(self, nums: list[int]) -> int:
-        nums = sorted(x for x in nums if x)
+        nums.sort()
         n = len(nums)
 
-        rs = 2 + bisect_left(range(2, n), True, key=lambda x: (
+        z = max(2, bisect_left(nums, 1))
+        s = z + bisect_left(range(z, n), True, key=lambda x: (
             nums[0] + nums[1] <= nums[x]
         ))
+        c = comb(s + 2 - z, 3)
 
-        return (rs - 2) * (rs - 1) * rs // 6 + sum(
-            l - bisect_left(nums, True, hi=l, key=lambda x: (
-                nums[l] + x > nums[r]
-            ))
-            for r in range(rs, n)
-            if nums[r - 2] + nums[r - 1] > nums[r]
-            for l in range(
-                1 + bisect_left(range(1, r), True, key=lambda x: (
-                    nums[x - 1] + nums[x] > nums[r]
-                )),
-                r
-            )
-        )
-        
+        for i in range(s, n):
+            if nums[i - 2] + nums[i - 1] > nums[i]:
+                iv = nums[i]
+                l, r = 0, i - 1
+                while l < r:
+                    if nums[l] + nums[r] > iv:
+                        c += r - l
+                        r -= 1
+                    else:
+                        l += 1
+
+        return c
 # CODE-END
