@@ -1,7 +1,7 @@
 from math import isqrt
 
 def solve(n: int) -> int:
-    is_prime = bytearray(b'\x01') * LIMIT
+    is_prime = bytearray(b'\x01') * (n + 1)
     is_prime[0:2] = b'\x00\x00'
 
     for p in range(2, isqrt(n - 1) + 1):
